@@ -1,0 +1,18 @@
+# Python cache
+__pycache__/
+*.pyc
+.venv/
+
+# Image archives used for loading images into kind
+*.tar
+
+# Terraform local files (phase 5) - state can contain secrets
+.terraform/
+*.tfstate
+*.tfstate.*
+*.tfvars
+
+# Editor files
+*.swp
+.vscode/
+.idea/

@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mini-devops-lab
+  namespace: mini-lab
+  labels:
+    app: mini-devops-lab
+spec:
+  # Two copies of the app running at all times
+  replicas: 2
+  selector:
+    matchLabels:
+      app: mini-devops-lab
+  template:
+    metadata:
+      labels:
+        app: mini-devops-lab
+    spec:
+      containers:
+        - name: app
+          image: localhost/mini-devops-lab:v2
+          # Image was loaded into kind manually, never pull from a registry
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 5000
+          # Only send traffic to the pod once /health answers
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 5000
+            initialDelaySeconds: 2
+            periodSeconds: 5
+          # Restart the container if /health stops answering
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 5000
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          # Small limits so a broken pod can't eat the whole machine
+          resources:
+            requests:
+              cpu: 50m
+              memory: 64Mi
+            limits:
+              memory: 128Mi

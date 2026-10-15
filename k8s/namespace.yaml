@@ -1,0 +1,5 @@
+# Dedicated namespace to keep this project isolated
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: mini-lab

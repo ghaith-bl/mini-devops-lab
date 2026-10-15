@@ -1,0 +1,19 @@
+# Tells Grafana where to load dashboard JSON files from at startup
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: grafana-dashboard-provider
+  namespace: monitoring
+data:
+  dashboards.yaml: |
+    apiVersion: 1
+    providers:
+      - name: mini-lab
+        orgId: 1
+        folder: "mini-lab"          # Folder name shown in the Grafana UI
+        type: file
+        disableDeletion: true       # Can't delete the dashboard from the UI
+        allowUiUpdates: false       # Git is the source of truth, not the UI
+        updateIntervalSeconds: 30   # Re-read files every 30s
+        options:
+          path: /etc/grafana/dashboards

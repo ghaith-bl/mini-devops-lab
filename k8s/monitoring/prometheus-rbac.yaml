@@ -1,0 +1,32 @@
+# 1) Identity: Prometheus pod will run as this ServiceAccount
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: prometheus
+  namespace: monitoring
+---
+# 2) Permissions: read-only access to pods, ONLY in the app namespace
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: prometheus-read-pods
+  namespace: mini-lab
+rules:
+  - apiGroups: [""]          # "" = core API group (pods live here)
+    resources: ["pods"]
+    verbs: ["get", "list", "watch"]
+---
+# 3) Binding: give the Role above to the ServiceAccount in monitoring
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: prometheus-read-pods
+  namespace: mini-lab
+subjects:
+  - kind: ServiceAccount
+    name: prometheus
+    namespace: monitoring
+roleRef:
+  kind: Role
+  name: prometheus-read-pods
+  apiGroup: rbac.authorization.k8s.io

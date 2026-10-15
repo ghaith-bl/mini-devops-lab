@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: grafana-datasources
+  namespace: monitoring
+data:
+  # Grafana reads this file at startup and adds Prometheus automatically
+  datasources.yaml: |
+    apiVersion: 1
+    datasources:
+      - name: Prometheus
+        type: prometheus
+        # Fixed ID, so dashboards can point to this datasource later
+        uid: prometheus
+        # Grafana server talks to Prometheus, not the browser
+        access: proxy
+        # Service DNS name: <service>.<namespace>.svc:<port>
+        url: http://prometheus.monitoring.svc:9090
+        isDefault: true

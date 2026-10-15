@@ -1,0 +1,41 @@
+name: build-and-push
+
+# When to run: on every push to main, or manually from the Actions tab
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+# The automatic token can read the repo and write to the package registry
+permissions:
+  contents: read
+  packages: write
+
+env:
+  IMAGE_NAME: ghcr.io/ghaith-bl/mini-devops-lab
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      # Get the repo code onto the runner
+      - name: Checkout code
+        uses: actions/checkout@v5
+
+      # Log in to GitHub Container Registry using the automatic token
+      - name: Log in to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      # Build from the app/ folder and push two tags
+      - name: Build and push image
+        uses: docker/build-push-action@v6
+        with:
+          context: app
+          push: true
+          tags: |
+            ${{ env.IMAGE_NAME }}:latest
+            ${{ env.IMAGE_NAME }}:sha-${{ github.sha }}

@@ -4,7 +4,7 @@ terraform {
 
   required_providers {
     aws = {
-      source  = "hashicorp/aws"
+      source = "hashicorp/aws"
       # Stay on major version 6, allow minor/patch updates
       version = "~> 6.0"
     }

@@ -13,3 +13,8 @@ data "aws_ami" "al2023" {
     values = ["x86_64"]
   }
 }
+
+# Default VPC in the region (we use it to keep things simple)
+data "aws_vpc" "default" {
+  default = true
+}
